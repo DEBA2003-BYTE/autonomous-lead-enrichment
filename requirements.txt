@@ -1,0 +1,9 @@
+playwright
+openai
+pydantic
+python-dotenv
+beautifulsoup4
+httpx
+tiktoken
+tenacity
+pytest
