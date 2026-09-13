@@ -509,15 +509,6 @@ if not evidence or not evidence.strip():
     raise ValueError("Cannot extract intelligence from empty evidence.")
 ```
 
-## 📝 License
-
-[Add your license here if applicable]
-
-## 🤝 Contributing
-
-[Add contribution guidelines if applicable]
-
----
 
 **Built with:**
 - 🤖 **Playwright** - Headless browser automation
