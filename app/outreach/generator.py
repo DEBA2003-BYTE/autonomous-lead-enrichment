@@ -1,176 +1,54 @@
-import os
-from typing import Any, Dict, Optional
+from typing import Dict
 
-from openai import AsyncOpenAI
-
-from app.llm.prompts import (
-    OUTREACH_SYSTEM_PROMPT,
-    build_outreach_prompt,
-)
+from app.llm.schema import CompanyIntelligence
 
 
 class OutreachGenerator:
     """
-    Generates personalized outreach using an LLM.
+    Generates deterministic outreach drafts.
 
-    The generator receives:
-        - company intelligence
-        - lead scoring
-        - company domain
-
-    and produces structured outreach content.
-
-    The LLM is intentionally used here because
-    personalized outreach is one of the core agent
-    capabilities of the system.
+    No external API call.
     """
 
-    def __init__(
+    def generate(
         self,
-        model: Optional[str] = None,
-    ):
-        api_key = os.getenv("OPENAI_API_KEY")
+        intelligence: CompanyIntelligence,
+        company_domain: str,
+    ) -> Dict[str, str]:
 
-        if not api_key:
-            raise ValueError(
-                "OPENAI_API_KEY is not set."
-            )
+        company = company_domain
 
-        self.client = AsyncOpenAI(
-            api_key=api_key
+        overview = (
+            intelligence.company_overview
+            or "your company"
         )
 
-        self.model = (
-            model
-            or os.getenv(
-                "OPENAI_MODEL",
-                "gpt-4o-mini",
-            )
+        icp = (
+            intelligence.target_audience_icp
+            or "your team"
         )
 
-    async def generate(
-        self,
-        domain: str,
-        intelligence: Dict[str, Any],
-        lead_scoring: Dict[str, Any],
-    ) -> Dict[str, Any]:
-
-        intelligence = intelligence or {}
-        lead_scoring = lead_scoring or {}
-
-        if not domain:
-            raise ValueError(
-                "Company domain is required."
-            )
-
-        prompt = build_outreach_prompt(
-            domain=domain,
-            intelligence=intelligence,
-            lead_scoring=lead_scoring,
-        )
-
-        response = await self.client.responses.create(
-            model=self.model,
-            input=[
-                {
-                    "role": "system",
-                    "content": OUTREACH_SYSTEM_PROMPT,
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
-            ],
-        )
-
-        output = response.output_text.strip()
-
-        if not output:
-            raise ValueError(
-                "LLM returned empty outreach content."
-            )
-
-        return self._parse_response(
-            output=output,
-            lead_scoring=lead_scoring,
-        )
-
-    @staticmethod
-    def _parse_response(
-        output: str,
-        lead_scoring: Dict[str, Any],
-    ) -> Dict[str, Any]:
-        """
-        Convert the LLM's simple structured text into
-        a predictable dictionary.
-
-        Expected format:
-
-        SUBJECT: ...
-        GREETING: ...
-        BODY:
-        ...
-        """
-
-        lines = output.splitlines()
-
-        subject = ""
-        greeting = ""
-        body_lines = []
-
-        mode = None
-
-        for line in lines:
-
-            stripped = line.strip()
-
-            if stripped.startswith("SUBJECT:"):
-                subject = stripped[
-                    len("SUBJECT:"):
-                ].strip()
-
-            elif stripped.startswith("GREETING:"):
-                greeting = stripped[
-                    len("GREETING:"):
-                ].strip()
-
-            elif stripped == "BODY:":
-                mode = "body"
-
-            elif mode == "body":
-                body_lines.append(line)
-
-        body = "\n".join(
-            body_lines
-        ).strip()
-
-        # -------------------------------------------------
-        # Fallbacks
-        # -------------------------------------------------
-
-        if not subject:
-            subject = "Potential opportunity"
-
-        if not greeting:
-            greeting = "Hi there,"
-
-        if not body:
-            body = output
-
-        score = lead_scoring.get(
-            "score",
-            0,
-        )
-
-        priority = lead_scoring.get(
-            "priority",
-            "C",
+        email = (
+            "Subject: Potential opportunity for {}\n\n"
+            "Hi there,\n\n"
+            "I came across {} and noticed that your "
+            "company works with {}.\n\n"
+            "I would be interested in discussing whether "
+            "our solution could help your team.\n\n"
+            "Would you be open to a short conversation?\n\n"
+            "Best,\n"
+            "Business Development"
+        ).format(
+            company,
+            company,
+            icp,
         )
 
         return {
-            "subject": subject,
-            "greeting": greeting,
-            "body": body,
-            "priority": str(priority),
-            "lead_score": str(score),
+            "subject": (
+                "Potential opportunity for "
+                + company
+            ),
+            "body": email,
+            "personalization_basis": overview,
         }

@@ -13,18 +13,22 @@ class EvidenceBuilder:
 
     @staticmethod
     def estimate_tokens(text: str) -> int:
+
         if not text:
             return 0
 
-        return max(1, len(text) // 4)
+        return max(
+            1,
+            len(text) // 4,
+        )
 
     @staticmethod
-    def page_priority(page: ProcessedContent) -> int:
+    def page_priority(
+        page: ProcessedContent,
+    ) -> int:
 
         url = page.url.lower()
         title = page.title.lower()
-
-        priority = 0
 
         keywords = {
             "about": 30,
@@ -41,13 +45,15 @@ class EvidenceBuilder:
             "careers": 10,
         }
 
-        for keyword, score in keywords.items():
+        priority = 0
+
+        for keyword, points in keywords.items():
 
             if keyword in url:
-                priority += score
+                priority += points
 
             if keyword in title:
-                priority += score
+                priority += points
 
         if page.emails:
             priority += 20
@@ -68,16 +74,24 @@ class EvidenceBuilder:
         pages: List[ProcessedContent],
     ) -> str:
 
+        sections = [
+            "COMPANY DOMAIN: " + domain,
+            "",
+            "PUBLIC WEBSITE EVIDENCE",
+            "=" * 70,
+            "",
+            "Use only the evidence below.",
+            "Do not invent information.",
+            "",
+        ]
+
         if not pages:
-            return (
-                f"COMPANY DOMAIN: {domain}\n\n"
-                "PUBLIC WEBSITE EVIDENCE\n"
+
+            sections.append(
                 "No website evidence available."
             )
 
-        # -----------------------------------------------------
-        # Sort pages by usefulness
-        # -----------------------------------------------------
+            return "\n".join(sections)
 
         ranked_pages = sorted(
             pages,
@@ -85,16 +99,6 @@ class EvidenceBuilder:
             reverse=True,
         )
 
-        sections = [
-            f"COMPANY DOMAIN: {domain}",
-            "",
-            "PUBLIC WEBSITE EVIDENCE",
-            "=" * 70,
-            "",
-            "Use only the evidence below when extracting company intelligence.",
-            "Do not invent names, roles, emails, LinkedIn URLs, or company facts.",
-            "",
-        ]
         used_tokens = self.estimate_tokens(
             "\n".join(sections)
         )
@@ -106,30 +110,26 @@ class EvidenceBuilder:
             if used_tokens >= self.max_tokens:
                 break
 
-            # -------------------------------------------------
-            # Build page metadata
-            # -------------------------------------------------
-
-            page_header = [
-                f"SOURCE {source_index}",
-                f"URL: {page.url}",
-                f"TITLE: {page.title}",
-                f"TOKEN COUNT: {page.token_count}",
+            header = [
+                "SOURCE {}".format(source_index),
+                "URL: {}".format(page.url),
+                "TITLE: {}".format(page.title),
+                "TOKEN COUNT: {}".format(page.token_count),
             ]
 
             if page.emails:
-                page_header.append(
+                header.append(
                     "EMAILS FOUND: "
                     + ", ".join(page.emails)
                 )
 
             if page.linkedin_urls:
-                page_header.append(
+                header.append(
                     "LINKEDIN URLS FOUND: "
                     + ", ".join(page.linkedin_urls)
                 )
 
-            page_header.extend(
+            header.extend(
                 [
                     "",
                     "CONTENT:",
@@ -137,56 +137,45 @@ class EvidenceBuilder:
                 ]
             )
 
-            header_text = "\n".join(page_header)
+            header_text = "\n".join(header)
 
             header_tokens = self.estimate_tokens(
                 header_text
             )
 
-            remaining_tokens = (
+            remaining = (
                 self.max_tokens
                 - used_tokens
                 - header_tokens
             )
 
-            if remaining_tokens <= 100:
+            if remaining <= 100:
                 break
 
-            # -------------------------------------------------
-            # Limit page content to remaining global budget
-            # -------------------------------------------------
-
             content = page.text or (
-                "[No meaningful text extracted from this page]"
+                "[No meaningful text extracted]"
             )
 
-            content_tokens = self.estimate_tokens(
-                content
-            )
+            if self.estimate_tokens(content) > remaining:
 
-            if content_tokens > remaining_tokens:
-
-                # Approximate character limit.
-                max_chars = remaining_tokens * 4
+                max_chars = remaining * 4
 
                 content = content[:max_chars]
 
                 content += (
-                    "\n\n[Content truncated due to "
-                    "global evidence token budget]"
+                    "\n\n[Content truncated]"
                 )
 
-            page_section = (
+            section = (
                 header_text
                 + "\n"
                 + content
                 + "\n\n"
                 + "=" * 70
-                + "\n"
             )
 
             section_tokens = self.estimate_tokens(
-                page_section
+                section
             )
 
             if (
@@ -195,7 +184,7 @@ class EvidenceBuilder:
             ):
                 break
 
-            sections.append(page_section)
+            sections.append(section)
 
             used_tokens += section_tokens
             source_index += 1
@@ -209,11 +198,9 @@ def build_evidence(
     max_tokens: int = 10000,
 ) -> str:
 
-    builder = EvidenceBuilder(
+    return EvidenceBuilder(
         max_tokens=max_tokens
-    )
-
-    return builder.build(
+    ).build(
         domain=domain,
         pages=pages,
     )

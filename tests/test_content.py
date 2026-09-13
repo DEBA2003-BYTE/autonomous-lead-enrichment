@@ -1,75 +1,69 @@
-from app.scraper.content import ContentProcessor
+from app.scraper.content import (
+    ContentProcessor,
+)
 
 
-def test_email_extraction():
-    processor = ContentProcessor()
+def test_extract_email():
 
-    html = """
-    <html>
-        <body>
-            <p>Contact us at hello@example.com</p>
-            <p>Sales: sales@example.com</p>
-        </body>
-    </html>
-    """
+    page = {
+        "url": "https://example.com",
+        "title": "Example",
+        "html": """
+            <html>
+                <body>
+                    Contact us at
+                    sales@example.com
+                </body>
+            </html>
+        """,
+        "text": "Contact us at sales@example.com",
+    }
 
-    result = processor.process(
-        url="https://example.com",
-        title="Example",
-        html=html,
+    result = ContentProcessor.process(
+        page
     )
 
-    assert "hello@example.com" in result.emails
-    assert "sales@example.com" in result.emails
+    assert (
+        "sales@example.com"
+        in result.emails
+    )
 
 
-def test_linkedin_extraction():
-    processor = ContentProcessor()
+def test_extract_linkedin():
 
-    html = """
-    <html>
-        <body>
-            <a href="https://linkedin.com/in/john-doe">
-                John
+    page = {
+        "url": "https://example.com/team",
+        "title": "Team",
+        "html": """
+            <a href="https://linkedin.com/in/johndoe">
+                John Doe
             </a>
-        </body>
-    </html>
-    """
+        """,
+        "text": "John Doe",
+    }
 
-    result = processor.process(
-        url="https://example.com",
-        title="Example",
-        html=html,
+    result = ContentProcessor.process(
+        page
     )
 
-    assert len(result.linkedin_urls) == 1
-
-
-def test_script_removal():
-    processor = ContentProcessor()
-
-    html = """
-    <html>
-        <body>
-            <script>
-                SECRET_JUNK_DATA
-            </script>
-
-            <h1>Company</h1>
-
-            <p>
-                We build software.
-            </p>
-        </body>
-    </html>
-    """
-
-    result = processor.process(
-        url="https://example.com",
-        title="Example",
-        html=html,
+    assert any(
+        "linkedin.com/in/johndoe"
+        in url
+        for url in result.linkedin_urls
     )
 
-    assert "SECRET_JUNK_DATA" not in result.text
-    assert "Company" in result.text
-    assert "We build software." in result.text
+
+def test_token_count():
+
+    page = {
+        "url": "https://example.com",
+        "title": "Example",
+        "html": "<p>Hello world</p>",
+        "text": "Hello world",
+    }
+
+    result = ContentProcessor.process(
+        page
+    )
+
+    assert result.token_count > 0

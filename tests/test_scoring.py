@@ -1,12 +1,20 @@
-from app.llm.schema import CompanyIntelligence, TeamMember
-from app.scoring.lead_scorer import LeadScorer
+from app.llm.schema import (
+    CompanyIntelligence,
+    TeamMember,
+)
+from app.scoring.scorer import LeadScorer
 
 
 def test_high_quality_lead():
 
     intelligence = CompanyIntelligence(
-        company_overview="A software company.",
-        target_audience_icp="Engineering teams and enterprises.",
+        company_overview=(
+            "A software company building "
+            "cloud infrastructure for enterprises."
+        ),
+        target_audience_icp=(
+            "Engineering teams and enterprises."
+        ),
         contact_emails=[
             "info@example.com",
             "sales@example.com",
@@ -16,17 +24,20 @@ def test_high_quality_lead():
             TeamMember(
                 name="John Doe",
                 role="CEO",
-                linkedin_url="https://linkedin.com/in/johndoe",
+                linkedin_url=(
+                    "https://linkedin.com/in/johndoe"
+                ),
             ),
             TeamMember(
                 name="Jane Doe",
                 role="CTO",
-                linkedin_url="https://linkedin.com/in/janedoe",
+                linkedin_url=(
+                    "https://linkedin.com/in/janedoe"
+                ),
             ),
             TeamMember(
                 name="Alex Doe",
                 role="CPO",
-                linkedin_url=None,
             ),
         ],
         confidence_score=0.95,
@@ -37,7 +48,8 @@ def test_high_quality_lead():
     )
 
     assert result.score >= 75
-    assert result.priority == "HIGH"
+    assert result.priority == "A"
+    assert result.qualification == "HIGH"
 
 
 def test_low_quality_lead():
@@ -55,5 +67,4 @@ def test_low_quality_lead():
     )
 
     assert result.score < 50
-    assert result.priority == "LOW"
-
+    assert result.qualification == "LOW"

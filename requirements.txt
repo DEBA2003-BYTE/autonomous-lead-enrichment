@@ -1,4 +1,3 @@
-playwright
 openai
 pydantic
 python-dotenv
@@ -7,3 +6,4 @@ httpx
 tiktoken
 tenacity
 pytest
+playwright

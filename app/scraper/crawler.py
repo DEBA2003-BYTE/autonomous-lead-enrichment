@@ -1,3 +1,4 @@
+from typing import Dict, List
 from urllib.parse import urlparse
 
 from playwright.async_api import (
@@ -5,7 +6,9 @@ from playwright.async_api import (
     TimeoutError as PlaywrightTimeoutError,
 )
 
+
 class WebsiteCrawler:
+
     PAGE_KEYWORDS = {
         "about": 20,
         "company": 20,
@@ -50,21 +53,29 @@ class WebsiteCrawler:
         self.context = context
         self.max_pages = max_pages
 
-
     @staticmethod
-    def normalize_domain(domain: str) -> str:
+    def normalize_domain(
+        domain: str,
+    ) -> str:
+
         domain = domain.strip()
 
         if not domain:
-            raise ValueError("Domain cannot be empty.")
+            raise ValueError(
+                "Domain cannot be empty."
+            )
 
-        if not domain.startswith(("http://", "https://")):
+        if not domain.startswith(
+            ("http://", "https://")
+        ):
             domain = "https://" + domain
 
         return domain.rstrip("/")
 
     @staticmethod
-    def normalize_hostname(hostname: str) -> str:
+    def normalize_hostname(
+        hostname: str,
+    ) -> str:
 
         hostname = hostname.lower().strip()
 
@@ -73,21 +84,28 @@ class WebsiteCrawler:
 
         return hostname
 
-    async def fetch_page(self, url: str) -> dict:
+    async def fetch_page(
+        self,
+        url: str,
+    ) -> dict:
+
         page = await self.context.new_page()
 
         try:
+
             response = await page.goto(
                 url,
                 wait_until="domcontentloaded",
-                timeout=30_000,
+                timeout=30000,
             )
 
             try:
+
                 await page.wait_for_load_state(
                     "networkidle",
-                    timeout=10_000,
+                    timeout=10000,
                 )
+
             except PlaywrightTimeoutError:
                 pass
 
@@ -101,9 +119,16 @@ class WebsiteCrawler:
 
             html = await page.content()
 
-            text = await page.locator("body").inner_text(
-                timeout=10_000,
-            )
+            try:
+
+                text = await page.locator(
+                    "body"
+                ).inner_text(
+                    timeout=10000
+                )
+
+            except Exception:
+                text = ""
 
             links = await page.locator(
                 "a[href]"
@@ -127,6 +152,7 @@ class WebsiteCrawler:
             }
 
         except PlaywrightTimeoutError:
+
             return {
                 "url": url,
                 "status_code": None,
@@ -138,6 +164,7 @@ class WebsiteCrawler:
             }
 
         except Exception as exc:
+
             return {
                 "url": url,
                 "status_code": None,
@@ -149,15 +176,15 @@ class WebsiteCrawler:
             }
 
         finally:
-            await page.close()
 
+            await page.close()
 
     @classmethod
     def extract_internal_links(
         cls,
         base_url: str,
-        links: list[dict],
-    ) -> list[dict]:
+        links: List[Dict],
+    ) -> List[Dict]:
 
         base_domain = cls.normalize_hostname(
             urlparse(base_url).hostname or ""
@@ -185,15 +212,26 @@ class WebsiteCrawler:
         )
 
         for link in links:
-            href = link.get("href", "").strip()
-            text = link.get("text", "").strip()
+
+            href = link.get(
+                "href",
+                "",
+            ).strip()
+
+            text = link.get(
+                "text",
+                "",
+            ).strip()
 
             if not href:
                 continue
 
             parsed = urlparse(href)
 
-            if parsed.scheme not in ("http", "https"):
+            if parsed.scheme not in (
+                "http",
+                "https",
+            ):
                 continue
 
             hostname = cls.normalize_hostname(
@@ -205,17 +243,18 @@ class WebsiteCrawler:
 
             path = parsed.path.lower()
 
-            if path.endswith(ignored_extensions):
+            if path.endswith(
+                ignored_extensions
+            ):
                 continue
 
             clean_url = (
-                f"{parsed.scheme}://"
-                f"{parsed.netloc}"
-                f"{parsed.path}"
+                "{}://{}{}".format(
+                    parsed.scheme,
+                    parsed.netloc,
+                    parsed.path,
+                )
             ).rstrip("/")
-
-            if not clean_url:
-                continue
 
             if clean_url in seen:
                 continue
@@ -241,6 +280,7 @@ class WebsiteCrawler:
         parsed = urlparse(url)
 
         path = parsed.path.lower().strip("/")
+
         anchor = anchor_text.lower().strip()
 
         segments = [
@@ -251,10 +291,12 @@ class WebsiteCrawler:
 
         score = 0
 
-
         for segment in segments:
+
             if segment in cls.PAGE_KEYWORDS:
-                score += cls.PAGE_KEYWORDS[segment]
+                score += cls.PAGE_KEYWORDS[
+                    segment
+                ]
 
         anchor_keywords = {
             "about us": 12,
@@ -272,10 +314,12 @@ class WebsiteCrawler:
         }
 
         for keyword, points in anchor_keywords.items():
+
             if keyword in anchor:
                 score += points
 
         for keyword in cls.EXCLUDED_KEYWORDS:
+
             if keyword in segments:
                 score -= 12
 
@@ -287,40 +331,46 @@ class WebsiteCrawler:
 
         return score
 
-
     @classmethod
     def prioritize_links(
         cls,
-        links: list[dict],
+        links: List[Dict],
         max_pages: int = 8,
-    ) -> list[dict]:
+    ) -> List[Dict]:
 
-        scored_links = []
+        scored = []
 
         for link in links:
-            url = link.get("url", "")
+
+            url = link.get(
+                "url",
+                "",
+            )
 
             if not url:
                 continue
 
             score = cls.score_link(
                 url,
-                link.get("anchor_text", ""),
+                link.get(
+                    "anchor_text",
+                    "",
+                ),
             )
 
             if score <= 0:
                 continue
 
-            scored_links.append(
+            scored.append(
                 {
                     **link,
                     "score": score,
                 }
             )
 
-        scored_links.sort(
+        scored.sort(
             key=lambda item: item["score"],
             reverse=True,
         )
 
-        return scored_links[:max_pages]
+        return scored[:max_pages]

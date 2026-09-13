@@ -2,20 +2,20 @@ import logging
 import sys
 
 
-def setup_logger() -> logging.Logger:
-    """
-    Configure and return the application logger.
-    """
+def setup_logger(
+    name: str = "lead-enrichment",
+) -> logging.Logger:
 
-    logger = logging.getLogger("lead-enrichment")
-
+    logger = logging.getLogger(name)
 
     if logger.handlers:
         return logger
 
     logger.setLevel(logging.INFO)
 
-    handler = logging.StreamHandler(sys.stdout)
+    handler = logging.StreamHandler(
+        sys.stdout
+    )
 
     formatter = logging.Formatter(
         "%(asctime)s | %(levelname)s | %(message)s",
@@ -25,5 +25,7 @@ def setup_logger() -> logging.Logger:
     handler.setFormatter(formatter)
 
     logger.addHandler(handler)
+
+    logger.propagate = False
 
     return logger

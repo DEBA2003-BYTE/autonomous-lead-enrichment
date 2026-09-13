@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from openai import AsyncOpenAI
 
@@ -11,14 +11,16 @@ from app.llm.schema import CompanyIntelligence
 
 
 class LLMExtractor:
+    """
+    Extract structured company intelligence using OpenAI.
+
+    Token usage is recorded for cost tracking.
+    """
 
     def __init__(
         self,
         model: Optional[str] = None,
     ):
-        # -----------------------------------------------------
-        # Load API key
-        # -----------------------------------------------------
 
         api_key = os.getenv("OPENAI_API_KEY")
 
@@ -27,17 +29,9 @@ class LLMExtractor:
                 "OPENAI_API_KEY is not set."
             )
 
-        # -----------------------------------------------------
-        # Initialize OpenAI client
-        # -----------------------------------------------------
-
         self.client = AsyncOpenAI(
             api_key=api_key
         )
-
-        # -----------------------------------------------------
-        # Model configuration
-        # -----------------------------------------------------
 
         self.model = (
             model
@@ -47,16 +41,11 @@ class LLMExtractor:
             )
         )
 
-        # -----------------------------------------------------
-        # Basic configuration
-        # -----------------------------------------------------
-
-        self.max_evidence_chars = int(
-            os.getenv(
-                "MAX_EVIDENCE_CHARS",
-                "100000",
-            )
-        )
+        self.last_usage: Dict[str, Any] = {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+        }
 
     async def extract(
         self,
@@ -64,45 +53,10 @@ class LLMExtractor:
         evidence: str,
     ) -> CompanyIntelligence:
 
-        # -----------------------------------------------------
-        # Validate domain
-        # -----------------------------------------------------
-
-        if not company_domain.strip():
-            raise ValueError(
-                "Company domain cannot be empty."
-            )
-
-        # -----------------------------------------------------
-        # Validate evidence
-        # -----------------------------------------------------
-
-        if not evidence.strip():
+        if not evidence or not evidence.strip():
             raise ValueError(
                 "Cannot extract intelligence from empty evidence."
             )
-
-        # -----------------------------------------------------
-        # Prevent accidentally huge prompts
-        # -----------------------------------------------------
-
-        if len(evidence) > self.max_evidence_chars:
-            evidence = evidence[
-                :self.max_evidence_chars
-            ]
-
-        # -----------------------------------------------------
-        # Build prompts
-        # -----------------------------------------------------
-
-        user_prompt = build_user_prompt(
-            company_domain,
-            evidence,
-        )
-
-        # -----------------------------------------------------
-        # Call OpenAI structured output API
-        # -----------------------------------------------------
 
         response = await self.client.responses.parse(
             model=self.model,
@@ -113,19 +67,68 @@ class LLMExtractor:
                 },
                 {
                     "role": "user",
-                    "content": user_prompt,
+                    "content": build_user_prompt(
+                        company_domain,
+                        evidence,
+                    ),
                 },
             ],
             text_format=CompanyIntelligence,
+            max_output_tokens=2000,
         )
 
-        # -----------------------------------------------------
-        # Validate structured output
-        # -----------------------------------------------------
+        usage = getattr(
+            response,
+            "usage",
+            None,
+        )
 
-        if response.output_parsed is None:
+        if usage:
+
+            input_tokens = getattr(
+                usage,
+                "input_tokens",
+                0,
+            ) or 0
+
+            output_tokens = getattr(
+                usage,
+                "output_tokens",
+                0,
+            ) or 0
+
+            total_tokens = getattr(
+                usage,
+                "total_tokens",
+                input_tokens + output_tokens,
+            ) or 0
+
+            self.last_usage = {
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens,
+                "total_tokens": total_tokens,
+            }
+
+        else:
+
+            self.last_usage = {
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "total_tokens": 0,
+            }
+
+        parsed = getattr(
+            response,
+            "output_parsed",
+            None,
+        )
+
+        if parsed is None:
             raise ValueError(
                 "LLM returned no structured output."
             )
 
-        return response.output_parsed
+        return parsed
+
+    def get_usage(self) -> Dict[str, Any]:
+        return dict(self.last_usage)
