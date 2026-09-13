@@ -28,7 +28,6 @@ htmlcov/
 *.log
 
 # Generated output
-output.json
 
 # Temporary files
 *.tmp

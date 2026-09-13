@@ -1,0 +1,364 @@
+{
+  "generated_at": "2026-09-13T07:17:46.478943Z",
+  "domains_processed": 3,
+  "successful": 3,
+  "failed": 0,
+  "summary": {
+    "success_rate": 100.0,
+    "total_input_tokens": 17986,
+    "total_output_tokens": 640,
+    "total_llm_tokens": 18626,
+    "estimated_total_llm_cost_usd": 0.0030819
+  },
+  "results": [
+    {
+      "domain": "https://postman.com",
+      "success": true,
+      "error": null,
+      "processed_at": "2026-09-13T07:15:12.705035Z",
+      "pages": [
+        {
+          "url": "https://postman.com",
+          "title": "Postman: The World's Leading API Platform | Sign Up for Free",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 1115
+        },
+        {
+          "url": "https://www.postman.com/company/contact-us",
+          "title": "Contact Us | Postman",
+          "emails": [
+            "info-jp@postman.com",
+            "info@postman.com",
+            "u003einfo-jp@postman.com",
+            "u003einfo@postman.com"
+          ],
+          "linkedin_urls": [],
+          "token_count": 1253
+        },
+        {
+          "url": "https://www.postman.com/company/contact-sales",
+          "title": "Contact Our Sales Team & Get Started | Postman",
+          "emails": [
+            "help@postman.com",
+            "u003ehelp@postman.com"
+          ],
+          "linkedin_urls": [],
+          "token_count": 1650
+        },
+        {
+          "url": "https://www.postman.com/company/about-postman",
+          "title": "About Postman",
+          "emails": [
+            "info-jp@postman.com",
+            "info@postman.com",
+            "u003einfo-jp@postman.com",
+            "u003einfo@postman.com"
+          ],
+          "linkedin_urls": [],
+          "token_count": 1958
+        },
+        {
+          "url": "https://www.postman.com/company/careers",
+          "title": "Careers | Postman",
+          "emails": [
+            "accommodations@postman.com"
+          ],
+          "linkedin_urls": [],
+          "token_count": 2302
+        },
+        {
+          "url": "https://www.postman.com/pricing",
+          "title": "Plans & Pricing | Postman API Platform",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 6842
+        },
+        {
+          "url": "https://www.postman.com/company/press-media",
+          "title": "Press and Media | Postman",
+          "emails": [],
+          "linkedin_urls": [
+            "https://www.linkedin.com/in/abhinavasthana",
+            "https://www.linkedin.com/in/ankit-sobti"
+          ],
+          "token_count": 3524
+        },
+        {
+          "url": "https://www.postman.com/product/ai-engineer",
+          "title": "Meet the AI Engineer | Postman",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 2482
+        },
+        {
+          "url": "https://www.postman.com/security",
+          "title": "Postman Security - Compliance, Privacy, & Reliability",
+          "emails": [
+            "security@postman.com",
+            "u003esecurity@postman.com"
+          ],
+          "linkedin_urls": [],
+          "token_count": 4098
+        }
+      ],
+      "intelligence": {
+        "company_overview": "Postman is an API platform for building and using APIs. It simplifies the API lifecycle, supports collaboration, and provides productivity, quality, and governance capabilities for developers and organizations.",
+        "target_audience_icp": "Developers, API-focused teams, and organizations that build, test, manage, govern, and collaborate around APIs. The evidence also indicates use by large enterprises, including Fortune 500 companies.",
+        "contact_emails": [
+          "help@postman.com",
+          "info-jp@postman.com",
+          "info@postman.com",
+          "accommodations@postman.com"
+        ],
+        "leadership_team": [
+          {
+            "name": "Abhinav Asthana",
+            "role": "CEO and co-founder",
+            "linkedin_url": null
+          },
+          {
+            "name": "Ankit Sobti",
+            "role": "Co-founder",
+            "linkedin_url": null
+          },
+          {
+            "name": "Abhijit Kane",
+            "role": "Co-founder",
+            "linkedin_url": null
+          }
+        ],
+        "confidence_score": 0.98
+      },
+      "lead_score": {
+        "score": 77,
+        "priority": "A",
+        "qualification": "HIGH",
+        "reasons": [
+          "Company overview identified.",
+          "Target audience / ICP identified.",
+          "Multiple public contact emails discovered.",
+          "Multiple leadership members identified.",
+          "High-confidence company intelligence."
+        ]
+      },
+      "outreach": {
+        "subject": "Potential opportunity for https://postman.com",
+        "body": "Subject: Potential opportunity for https://postman.com\n\nHi there,\n\nI came across https://postman.com and noticed that your company works with Developers, API-focused teams, and organizations that build, test, manage, govern, and collaborate around APIs. The evidence also indicates use by large enterprises, including Fortune 500 companies..\n\nI would be interested in discussing whether our solution could help your team.\n\nWould you be open to a short conversation?\n\nBest,\nBusiness Development",
+        "personalization_basis": "Postman is an API platform for building and using APIs. It simplifies the API lifecycle, supports collaboration, and provides productivity, quality, and governance capabilities for developers and organizations."
+      },
+      "cost": {
+        "input_tokens": 6128,
+        "output_tokens": 194,
+        "total_tokens": 6322,
+        "estimated_input_cost_usd": 0.0009192,
+        "estimated_output_cost_usd": 0.0001164,
+        "estimated_cost_usd": 0.0010356
+      },
+      "clean_tokens": 25224
+    },
+    {
+      "domain": "https://supabase.com",
+      "success": true,
+      "error": null,
+      "processed_at": "2026-09-13T07:17:03.043903Z",
+      "pages": [
+        {
+          "url": "https://supabase.com",
+          "title": "Supabase | The Postgres Development Platform",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 2229
+        },
+        {
+          "url": "https://supabase.com/contact-us",
+          "title": "Contact Us | Supabase",
+          "emails": [
+            "abuse@supabase.com",
+            "help-events@supabase.com",
+            "legal@supabase.com",
+            "privacy@supabase.com",
+            "security@supabase.com"
+          ],
+          "linkedin_urls": [],
+          "token_count": 707
+        },
+        {
+          "url": "https://supabase.com/company",
+          "title": "One of the world's fastest-growing open source communities | Supabase",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 952
+        },
+        {
+          "url": "https://supabase.com/pricing",
+          "title": "Pricing & Fees | Supabase",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 4525
+        },
+        {
+          "url": "https://supabase.com/contact/sales",
+          "title": "Contact Sales & Request a Demo | Supabase",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 526
+        },
+        {
+          "url": "https://supabase.com/solutions/innovation-teams",
+          "title": "The Production Backend for AI-Built Applications | Supabase",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 2747
+        },
+        {
+          "url": "https://supabase.com/security",
+          "title": "Security at Supabase",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 1316
+        },
+        {
+          "url": "https://supabase.com/customers",
+          "title": "Customer Stories | Supabase",
+          "emails": [],
+          "linkedin_urls": [
+            "https://www.linkedin.com/in/david-wilson-285564140"
+          ],
+          "token_count": 1310
+        },
+        {
+          "url": "https://supabase.com/customers/lovable",
+          "title": "Lovable | Supabase Customer Stories",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 2066
+        }
+      ],
+      "intelligence": {
+        "company_overview": "Supabase provides a production-ready Postgres developer platform with managed database, authentication, storage, realtime functionality, edge functions, vectors, APIs, and enterprise security features.",
+        "target_audience_icp": "Developers, AI builders, startups, agencies, and enterprise innovation teams building applications from prototypes to production, including organizations needing scalable Postgres infrastructure and integrations with existing enterprise systems.",
+        "contact_emails": [
+          "abuse@supabase.com",
+          "help-events@supabase.com",
+          "legal@supabase.com",
+          "privacy@supabase.com",
+          "security@supabase.com"
+        ],
+        "leadership_team": [
+          {
+            "name": "Tracy Lane",
+            "role": "General Counsel of Supabase, Inc.",
+            "linkedin_url": null
+          }
+        ],
+        "confidence_score": 0.95
+      },
+      "lead_score": {
+        "score": 72,
+        "priority": "B",
+        "qualification": "MEDIUM",
+        "reasons": [
+          "Company overview identified.",
+          "Target audience / ICP identified.",
+          "Multiple public contact emails discovered.",
+          "Company leadership identified.",
+          "High-confidence company intelligence."
+        ]
+      },
+      "outreach": {
+        "subject": "Potential opportunity for https://supabase.com",
+        "body": "Subject: Potential opportunity for https://supabase.com\n\nHi there,\n\nI came across https://supabase.com and noticed that your company works with Developers, AI builders, startups, agencies, and enterprise innovation teams building applications from prototypes to production, including organizations needing scalable Postgres infrastructure and integrations with existing enterprise systems..\n\nI would be interested in discussing whether our solution could help your team.\n\nWould you be open to a short conversation?\n\nBest,\nBusiness Development",
+        "personalization_basis": "Supabase provides a production-ready Postgres developer platform with managed database, authentication, storage, realtime functionality, edge functions, vectors, APIs, and enterprise security features."
+      },
+      "cost": {
+        "input_tokens": 8198,
+        "output_tokens": 316,
+        "total_tokens": 8514,
+        "estimated_input_cost_usd": 0.0012297,
+        "estimated_output_cost_usd": 0.0001896,
+        "estimated_cost_usd": 0.0014193
+      },
+      "clean_tokens": 16378
+    },
+    {
+      "domain": "https://vapi.ai",
+      "success": true,
+      "error": null,
+      "processed_at": "2026-09-13T07:17:25.835096Z",
+      "pages": [
+        {
+          "url": "https://vapi.ai",
+          "title": "Vapi - Build Advanced Voice AI Agents",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 869
+        },
+        {
+          "url": "https://vapi.ai/pricing",
+          "title": "Vapi - Build Advanced Voice AI Agents",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 1069
+        },
+        {
+          "url": "https://vapi.ai/customers",
+          "title": "Vapi Customers",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 526
+        },
+        {
+          "url": "https://vapi.ai/sales",
+          "title": "Contact Sales - VAPI",
+          "emails": [],
+          "linkedin_urls": [],
+          "token_count": 362
+        },
+        {
+          "url": "https://vapi.ai/careers",
+          "title": "VAPI - Careers",
+          "emails": [
+            "Talent@vapi.ai"
+          ],
+          "linkedin_urls": [],
+          "token_count": 865
+        }
+      ],
+      "intelligence": {
+        "company_overview": "Vapi provides a unified, API-native platform for building, deploying, monitoring, and scaling voice AI agents. Its platform supports use cases such as lead qualification, customer support, appointment scheduling, candidate screening, and enterprise call automation.",
+        "target_audience_icp": "Developers, small businesses, and enterprise organizations—including automotive, freight, healthcare, home security, insurance, marketplaces, and staffing companies—that need scalable voice AI agents and infrastructure for customer-facing calls and workflows.",
+        "contact_emails": [
+          "Talent@vapi.ai"
+        ],
+        "leadership_team": [],
+        "confidence_score": 0.98
+      },
+      "lead_score": {
+        "score": 60,
+        "priority": "B",
+        "qualification": "MEDIUM",
+        "reasons": [
+          "Company overview identified.",
+          "Target audience / ICP identified.",
+          "Public company contact email discovered.",
+          "High-confidence company intelligence."
+        ]
+      },
+      "outreach": {
+        "subject": "Potential opportunity for https://vapi.ai",
+        "body": "Subject: Potential opportunity for https://vapi.ai\n\nHi there,\n\nI came across https://vapi.ai and noticed that your company works with Developers, small businesses, and enterprise organizations—including automotive, freight, healthcare, home security, insurance, marketplaces, and staffing companies—that need scalable voice AI agents and infrastructure for customer-facing calls and workflows..\n\nI would be interested in discussing whether our solution could help your team.\n\nWould you be open to a short conversation?\n\nBest,\nBusiness Development",
+        "personalization_basis": "Vapi provides a unified, API-native platform for building, deploying, monitoring, and scaling voice AI agents. Its platform supports use cases such as lead qualification, customer support, appointment scheduling, candidate screening, and enterprise call automation."
+      },
+      "cost": {
+        "input_tokens": 3660,
+        "output_tokens": 130,
+        "total_tokens": 3790,
+        "estimated_input_cost_usd": 0.000549,
+        "estimated_output_cost_usd": 7.8e-05,
+        "estimated_cost_usd": 0.000627
+      },
+      "clean_tokens": 3691
+    }
+  ]
+}
