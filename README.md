@@ -2,6 +2,124 @@
 
 **An end-to-end AI-powered lead intelligence pipeline** that autonomously researches company websites, extracts structured business intelligence, discovers leadership teams, enriches LinkedIn profiles, scores lead quality, generates personalized outreach messaging, and tracks LLM usage with cost estimation.
 
+---
+
+## 🚀 Quick Start (2 minutes)
+
+### Prerequisites
+- **Python 3.9+**
+- **OpenAI API key** (required)
+- **SerpAPI key** (optional, for search enrichment)
+- **Tavily API key** (optional, for web search)
+
+### 1️⃣ Clone & Install
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd autonomous-lead-enrichment
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install Playwright browsers
+playwright install chromium
+```
+
+### 2️⃣ Configure Environment Variables
+
+```bash
+# Copy the example .env file
+cp .env.example .env
+
+# Edit .env and add your API keys:
+# OPENAI_API_KEY=sk-...your-key-here...
+# OPENAI_MODEL=gpt-4o
+# OPENAI_INPUT_PRICE_PER_MILLION=3.00
+# OPENAI_OUTPUT_PRICE_PER_MILLION=6.00
+```
+
+**Required in `.env`:**
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-4o
+OPENAI_INPUT_PRICE_PER_MILLION=3.00
+OPENAI_OUTPUT_PRICE_PER_MILLION=6.00
+```
+
+**Optional:**
+```env
+SERPAPI_KEY=your_serpapi_key_here
+TAVILY_API_KEY=your_tavily_api_key_here
+```
+
+### 3️⃣ Run the Pipeline
+
+**Process a single domain:**
+```bash
+python run.py example.com
+```
+
+**Process multiple domains:**
+```bash
+python run.py example.com competitor.com startup.io
+```
+
+**Output:**
+Results are saved to `output.json` with:
+- ✅ Company intelligence (overview, ICP, team, emails)
+- ✅ Leadership information with LinkedIn URLs
+- ✅ Lead quality score (0-100)
+- ✅ Personalized outreach messaging
+- ✅ Cost breakdown (input/output tokens + USD)
+
+### Example Output Structure
+
+```json
+{
+  "domains": [
+    {
+      "domain": "example.com",
+      "success": true,
+      "processed_at": "2024-01-15T10:30:00Z",
+      "intelligence": {
+        "company_overview": "Example is a leading B2B SaaS platform...",
+        "target_audience_icp": "Mid-market tech companies...",
+        "contact_emails": ["hello@example.com"],
+        "leadership_team": [
+          {
+            "name": "John Doe",
+            "role": "CEO",
+            "linkedin_url": "https://www.linkedin.com/in/johndoe"
+          }
+        ],
+        "confidence_score": 0.92
+      },
+      "lead_score": {
+        "score": 85,
+        "reasoning": "Strong fit based on team size and market positioning"
+      },
+      "outreach": {
+        "subject": "Scaling to example.com - Let's talk",
+        "body": "Hi Example team, I noticed you're in the SaaS space..."
+      },
+      "cost": {
+        "input_tokens": 1250,
+        "output_tokens": 340,
+        "total_tokens": 1590,
+        "estimated_cost_usd": 0.00579
+      }
+    }
+  ]
+}
+```
+
+---
+
 ## 🎯 What This System Does
 
 This system transforms a company domain into a comprehensive, actionable sales intelligence record. Given a domain (e.g., `example.com`), it:
@@ -221,115 +339,7 @@ This system is built for production reliability:
 - **Relevance filtering**: Pages ranked by keyword matching (about, team, leadership prioritized)
 - **Page filtering**: Excludes non-business pages (blog, docs, login) automatically
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.9+
-- OpenAI API key
-- SerpAPI key (for search enrichment, optional)
-- Tavily API key (for web search, optional)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd autonomous-lead-enrichment
-   ```
-
-2. **Create and activate virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Install Playwright browsers**
-   ```bash
-   playwright install chromium
-   ```
-
-5. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your API keys:
-   # OPENAI_API_KEY=your_key_here
-   # OPENAI_MODEL=gpt-4o (or your preferred model)
-   # SERPAPI_KEY=your_key_here (optional)
-   # TAVILY_API_KEY=your_key_here (optional)
-   # OPENAI_INPUT_PRICE_PER_MILLION=3.00
-   # OPENAI_OUTPUT_PRICE_PER_MILLION=6.00
-   ```
-
-### Running the Pipeline
-
-**Single domain:**
-```bash
-python run.py example.com
-```
-
-**Multiple domains:**
-```bash
-python run.py example.com competitor.com startup.io
-```
-
-**Output:**
-Results are saved to `output.json` with the following structure:
-```json
-{
-  "domains": [
-    {
-      "domain": "example.com",
-      "success": true,
-      "processed_at": "2024-01-15T10:30:00Z",
-      "pages": [
-        {
-          "url": "https://example.com",
-          "title": "Example - Leading SaaS Platform",
-          "status_code": 200,
-          "content_length": 15234,
-          "content": "..."
-        }
-      ],
-      "intelligence": {
-        "company_overview": "Example is a leading B2B SaaS platform...",
-        "target_audience_icp": "Mid-market tech companies...",
-        "contact_emails": ["hello@example.com"],
-        "leadership_team": [
-          {
-            "name": "John Doe",
-            "role": "CEO",
-            "linkedin_url": "https://www.linkedin.com/in/johndoe"
-          }
-        ],
-        "confidence_score": 0.92
-      },
-      "lead_score": {
-        "score": 85,
-        "reasoning": "Strong fit based on team size and market positioning"
-      },
-      "outreach": {
-        "subject": "Scaling to example.com - Let's talk",
-        "body": "Hi Example team, I noticed you're in the SaaS space..."
-      },
-      "cost": {
-        "input_tokens": 1250,
-        "output_tokens": 340,
-        "total_tokens": 1590,
-        "estimated_input_cost_usd": 0.00375,
-        "estimated_output_cost_usd": 0.00204,
-        "estimated_cost_usd": 0.00579
-      }
-    }
-  ]
-}
-```
-
-## 📊 Example Output
+##  Example Output
 
 See `output.json` in the repository for a complete example of the pipeline output for a real company domain.
 
